@@ -19,41 +19,41 @@ let htmlString: string = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">`;
 
 htmlString += util.genTag`title${name}`;
-htmlString += util.endTag`head`;
+htmlString += util.genSingleTag`/head`;
 
-htmlString += util.startTag`body`;
-htmlString += util.startTag`header`;
+htmlString += util.genSingleTag`body`;
+htmlString += util.genSingleTag`header`;
 htmlString += util.genTag`h1${name}`;
 htmlString += util.genTag`p${subtitle}`;
-htmlString += util.endTag`header`;
+htmlString += util.genSingleTag`/header`;
 
-htmlString += util.startTag`section`;
+htmlString += util.genSingleTag`section`;
 htmlString += util.genTag`h2${section1}`;
 
-htmlString += util.startTag`ul`;
+htmlString += util.genSingleTag`ul`;
 
 for (let i: number = 0; i < 3; i += 1) {
-  htmlString += util.startTag`li`;
+  htmlString += util.genSingleTag`li`;
   htmlString += util.genTag`h3${exp}`;
   htmlString += util.genTag`h4${time}`;
   htmlString += util.genTag`p${desc}`;
-  htmlString += util.endTag`li`;
+  htmlString += util.genSingleTag`/li`;
 }
 
-htmlString += util.endTag`ul`;
+htmlString += util.genSingleTag`/ul`;
 
-htmlString += util.startTag`footer`;
+htmlString += util.genSingleTag`footer`;
 htmlString += util.genTag`p${copyright}`;
-htmlString += util.startTag`ul`;
+htmlString += util.genSingleTag`ul`;
 for (let i: number = 0; i < 2; i += 1) {
-  htmlString += util.startTag`li`;
+  htmlString += util.genSingleTag`li`;
   htmlString += util.genTag`p${footer_link}`;
-  htmlString += util.endTag`li`;
+  htmlString += util.genSingleTag`/li`;
 }
-htmlString += util.endTag`ul`;
-htmlString += util.endTag`footer`;
+htmlString += util.genSingleTag`/ul`;
+htmlString += util.genSingleTag`/footer`;
 
-htmlString += util.endTag`body`;
-htmlString += util.endTag`html`;
+htmlString += util.genSingleTag`/body`;
+htmlString += util.genSingleTag`/html`;
 
 util.writeToFile("lol.html", htmlString);
