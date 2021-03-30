@@ -1,0 +1,40 @@
+{
+  "name": "Neeraj Aggarwal",
+  "tagline": "This is an example tagline.",
+  "sections": [
+    {
+      "sectionName": "Currently",
+      "points": [
+        {
+          "sectionPointName": "Experience 1",
+          "sectionTime": "June 1, 2020",
+          "sectionDescription": "This is a project description."
+        },
+        {
+          "sectionPointName": "Experience 2",
+          "sectionTime": "June 3, 2020",
+          "sectionDescription": "This is a project description."
+        }
+      ]
+    },
+    {
+      "sectionName": "Previously",
+      "points": [
+        {
+          "sectionPointName": "Experience 3",
+          "sectionTime": "June 1, 2020",
+          "sectionDescription": "This is a project description."
+        },
+        {
+          "sectionPointName": "Experience 4",
+          "sectionTime": "June 3, 2020",
+          "sectionDescription": "This is a project description."
+        }
+      ]
+    }
+  ],
+  "footerLinks": [
+    { "linkName": "Personal Site", "link": "https://neeraj.lol" },
+    { "linkName": "Github", "link": "https://github.com/n3a9" }
+  ]
+}

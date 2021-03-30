@@ -1,11 +1,6 @@
 import * as util from "./utils/generators";
+import data from "./data.json";
 
-const name = "neeraj";
-const subtitle = "subtitle goes here";
-const section1 = "experiences";
-const exp = "experience 1";
-const time = "june 1";
-const desc = "description";
 const copyright = "copyright";
 const footer_link = "footer link";
 
@@ -18,36 +13,39 @@ let htmlString: string = `
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">`;
 
-htmlString += util.genTag`title${name}`;
+htmlString += util.genTag`title${data.name}`;
 htmlString += util.genSingleTag`/head`;
 
 htmlString += util.genSingleTag`body`;
 htmlString += util.genSingleTag`header`;
-htmlString += util.genTag`h1${name}`;
-htmlString += util.genTag`p${subtitle}`;
+htmlString += util.genTag`h1${data.name}`;
+htmlString += util.genTag`p${data.tagline}subtitle`;
 htmlString += util.genSingleTag`/header`;
 
-htmlString += util.genSingleTag`section`;
-htmlString += util.genTag`h2${section1}`;
+for (let i: number = 0; i < data.sections.length; i++) {
+  htmlString += util.genSingleTag`section`;
+  htmlString += util.genTag`h2${data.sections[i].sectionName}`;
+  htmlString += util.genSingleTag`ul`;
 
-htmlString += util.genSingleTag`ul`;
+  for (let j: number = 0; j < data.sections[i].points.length; j += 1) {
+    let point = data.sections[i].points[j];
+    htmlString += util.genSingleTag`li`;
+    htmlString += util.genTag`h3${point.sectionPointName}`;
+    htmlString += util.genTag`h4${point.sectionTime}`;
+    htmlString += util.genTag`p${point.sectionDescription}`;
+    htmlString += util.genSingleTag`/li`;
+  }
 
-for (let i: number = 0; i < 3; i += 1) {
-  htmlString += util.genSingleTag`li`;
-  htmlString += util.genTag`h3${exp}`;
-  htmlString += util.genTag`h4${time}`;
-  htmlString += util.genTag`p${desc}`;
-  htmlString += util.genSingleTag`/li`;
+  htmlString += util.genSingleTag`/ul`;
+  htmlString += util.genSingleTag`/section`;
 }
-
-htmlString += util.genSingleTag`/ul`;
 
 htmlString += util.genSingleTag`footer`;
 htmlString += util.genTag`p${copyright}`;
 htmlString += util.genSingleTag`ul`;
-for (let i: number = 0; i < 2; i += 1) {
+for (let i: number = 0; i < data.footerLinks.length; i += 1) {
   htmlString += util.genSingleTag`li`;
-  htmlString += util.genTag`p${footer_link}`;
+  htmlString += util.genTag`p${data.footerLinks[i].link}`;
   htmlString += util.genSingleTag`/li`;
 }
 htmlString += util.genSingleTag`/ul`;
