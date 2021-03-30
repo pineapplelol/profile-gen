@@ -19,13 +19,12 @@ htmlString += util.genTag("h1", data.name);
 htmlString += util.genTag("p", data.tagline, { class: "subtitle" });
 htmlString += util.genSingleTag("/header");
 
-for (let i: number = 0; i < data.sections.length; i++) {
+for (const section of data.sections) {
   htmlString += util.genSingleTag("section");
-  htmlString += util.genTag("h2", data.sections[i].sectionName);
+  htmlString += util.genTag("h2", section.sectionName);
   htmlString += util.genSingleTag("ul");
 
-  for (let j: number = 0; j < data.sections[i].points.length; j += 1) {
-    let point = data.sections[i].points[j];
+  for (const point of section.points) {
     htmlString += util.genSingleTag("li");
     htmlString += util.genTag("h3", point.sectionPointName);
     htmlString += util.genTag("h4", point.sectionTime);
