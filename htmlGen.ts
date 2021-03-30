@@ -1,4 +1,4 @@
-import * as util from "./utils/generators";
+const util = require("./utils/generators");
 const data = require("./data.json");
 
 let htmlString: string = `
