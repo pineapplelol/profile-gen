@@ -42,27 +42,33 @@ var fs = require("fs");
  * Will generate both the start and end tag, as well as putting
  * the text in between. If an attribute for the tag is provided, it
  * is included as well.
- * @param tags – an array of the strings given. The first value is the
- *               tag to be used, and the second is the attribute.
- * @param text – the text to be put in between the tags.
+ * @param tag – the tag to be used in the html.
+ * @param text – the text to belong inside the tags.
+ * @param attributes – attributes that exist for the html tags.
  * @returns the full tag and text to be added to the html string.
  */
-var genTag = function (tags, text) {
-    return tags.length > 1
-        ? "<" + tags[0] + " class=\"" + tags[1] + "\">" + text + "</" + tags[0] + ">"
-        : "<" + tags[0] + ">" + text + "</" + tags[0] + ">";
+var genTag = function (tag, text, attributes) {
+    if (!attributes)
+        return "<" + tag + ">" + text + "</" + tag + ">";
+    var string = "<" + tag + " ";
+    Object.keys(attributes).map(function (k) { return (string += k + "=\"" + attributes[k] + "\" "); });
+    return string + (">" + text + "</" + tag + ">");
 };
 exports.genTag = genTag;
 /**
  * Will generate only a single tag. To make it an ending tag, the \
  * should be appended to the provided string. If an attribute for the
  * tag is provided, it is included as well.
- * @param tags – an array of the strings given. The first value is the
- *               tag to be used, and the second is the attribute.
+ * @param tag – the tag to be used in the html.
+ * @param attributes – attributes that exist for the html tags.
  * @returns the full tag to be added to the html string.
  */
-var genSingleTag = function (tags) {
-    return tags.length > 1 ? "<" + tags[0] + " class=\"" + tags[1] + "\">" : "<" + tags[0] + ">";
+var genSingleTag = function (tag, attributes) {
+    if (!attributes)
+        return "<" + tag + ">";
+    var string = "<" + tag + " ";
+    Object.keys(attributes).map(function (k) { return (string += k + "=\"" + attributes[k] + "\" "); });
+    return string + ">";
 };
 exports.genSingleTag = genSingleTag;
 /**
