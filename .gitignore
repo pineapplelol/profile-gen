@@ -1,4 +1,2 @@
 node_modules/
-
-utils/generators.js
-htmlGen.js
+*.js
