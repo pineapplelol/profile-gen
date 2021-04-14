@@ -1,6 +1,7 @@
 {
   "name": "Neeraj Aggarwal",
   "tagline": "This is an example tagline.",
+  "theme": { "color": "#002373" },
   "sections": [
     {
       "sectionName": "Currently",

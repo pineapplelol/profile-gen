@@ -15,7 +15,9 @@ export const genTag = (
   attributes?: Record<string, string>
 ) => {
   let string = `<${tag}`;
-  Object.keys(attributes).map((k) => (string += ` ${k}="${attributes[k]}"`));
+  Object.keys(attributes ?? {})?.map(
+    (k) => (string += ` ${k}="${attributes[k]}"`)
+  );
   return string + `>${text}</${tag}>`;
 };
 
@@ -32,7 +34,9 @@ export const genSingleTag = (
   attributes?: Record<string, string>
 ) => {
   let string = `<${tag}`;
-  Object.keys(attributes).map((k) => (string += ` ${k}="${attributes[k]}"`));
+  Object.keys(attributes ?? {}).map(
+    (k) => (string += ` ${k}="${attributes[k]}"`)
+  );
   return string + `>`;
 };
 
