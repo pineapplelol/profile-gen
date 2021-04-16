@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.genProfile = exports.writeToFile = exports.genSingleTag = exports.genTag = void 0;
+exports.parseJSON = exports.genProfile = exports.writeToFile = exports.genSingleTag = exports.genTag = void 0;
 var fs = require('fs');
 /**
  * Will generate both the start and end tag, as well as putting
@@ -108,7 +108,6 @@ var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void
         if (!fs.existsSync(dir))
             fs.mkdirSync(dir);
         exports.writeToFile('./profile-site/index.html', htmlString);
-        console.log(__dirname + ("/themes/" + cssTheme + ".css"));
         fs.readFile(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8', function (err, data) {
             if (err) {
                 console.error(err);
@@ -120,3 +119,7 @@ var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void
     });
 }); };
 exports.genProfile = genProfile;
+var parseJSON = function (args) {
+    return JSON.parse(fs.readFileSync("./" + args, 'utf8'));
+};
+exports.parseJSON = parseJSON;

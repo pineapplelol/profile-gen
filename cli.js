@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 var util = require('./generators');
 var _a = process.argv, args = _a.slice(2);
-var data = require("./" + args);
+var data = util.parseJSON(args);
 var htmlString = "\n<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"UTF-8\">\n  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <link rel=\"stylesheet\" href=\"main.css\">\n  <style>\n    :root {\n      --primary: " + data.theme.color + ";\n    }\n  </style>";
 htmlString += util.genTag('title', data.name);
 htmlString += util.genSingleTag('/head');

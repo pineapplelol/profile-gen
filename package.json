@@ -5,11 +5,10 @@
   "homepage": "https://github.com/pineapplelol/profile-gen",
   "main": "cli.js",
   "bin": {
-    "profile-gen": "./cli.js"
+    "profile-gen": "cli.js"
   },
   "dependencies": {
-    "fs": "^0.0.1-security",
-    "profile-gen": "^0.1.0"
+    "fs": "^0.0.1-security"
   },
   "devDependencies": {
     "@types/node": "^14.14.37"

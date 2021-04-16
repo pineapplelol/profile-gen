@@ -2,7 +2,7 @@
 
 const util = require('./generators');
 const [, , ...args] = process.argv;
-const data = require(`./${args}`);
+const data = util.parseJSON(args);
 
 let htmlString: string = `
 <!DOCTYPE html>

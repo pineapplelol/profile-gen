@@ -68,3 +68,7 @@ export const genProfile = async (htmlString: string, cssTheme: string) => {
     writeToFile('./profile-site/main.css', data);
   });
 };
+
+export const parseJSON = (args: string) => {
+  return JSON.parse(fs.readFileSync(`./${args}`, 'utf8'));
+};
