@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&display=swap');
+
+:root {
+  --text-color: #333;
+  --sidebar-size: min(20vw, 240px);
+  --right-width: 450px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 860px;
+  width: 95%;
+  font-size: 16px;
+  /* position: relative; */
+  margin-top: 55px;
+
+  color: var(--text-color);
+  font-family: 'Crimson Text', serif;
+
+  display: grid;
+  grid-template-columns: var(--sidebar-size) 100%;
+  grid-template-rows: 1fr 275px;
+  gap: 0px 7.5%;
+  grid-template-areas:
+    'sidebar header'
+    'sidebar main';
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+
+h1 {
+  margin: 0 0 20px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+h2 {
+  font-size: 21px;
+  font-weight: 400;
+  margin: 0 0 10px;
+  position: relative;
+}
+
+ul {
+  margin: 0;
+}
+
+ol {
+  list-style: decimal-leading-zero;
+}
+
+li {
+  line-height: 1.5;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: var(--right-width);
+  grid-area: header;
+}
+
+header > img {
+  max-width: 275px;
+  width: 100%;
+  padding-bottom: 30px;
+}
+
+header > img + h1 {
+  position: fixed;
+  left: max(calc(50vw - 430px), 2.5%);
+}
+
+main {
+  width: var(--right-width);
+  grid-area: main;
+  height: 100%;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+p.sub-title {
+  font-weight: 400;
+  margin: 0 0 20px;
+}
+
+section > ul {
+  margin-bottom: 20px;
+}
+
+section > ul > li > h3 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 400;
+}
+
+section > ul > li > h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+section > ul > li > p {
+  font-size: 16px;
+  margin: 0;
+}
+
+footer {
+  width: var(--sidebar-size);
+  grid-area: sidebar;
+}
+
+footer > p {
+  margin: 0;
+  display: none;
+}
+
+footer > ul {
+  padding: 2.75em 0 0 0;
+}
+
+footer > ul > li {
+  display: block;
+  line-height: 2;
+}
