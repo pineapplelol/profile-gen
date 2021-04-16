@@ -101,6 +101,13 @@ var writeToFile = function (path, data) { return __awaiter(void 0, void 0, void 
     });
 }); };
 exports.writeToFile = writeToFile;
+/**
+ * Will generate complete profile site by creating new directory called
+ * profile-site, and writing html code to index.html and copying relevant
+ * css theme into main.css.
+ * @param htmlString – the html code to be copied into index.html.
+ * @param cssTheme – the name of the css theme to be used for the site.
+ */
 var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void 0, void 0, function () {
     var dir;
     return __generator(this, function (_a) {
@@ -119,6 +126,11 @@ var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void
     });
 }); };
 exports.genProfile = genProfile;
+/**
+ * Given the args from the CLI, it will read and parse the JSON file to return the data.
+ * @param args – the args from the CLI containing the name of the JSON file.
+ * @returns the JSON data provided in the file.
+ */
 var parseJSON = function (args) {
     return JSON.parse(fs.readFileSync("./" + args, 'utf8'));
 };

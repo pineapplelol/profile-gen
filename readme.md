@@ -1,6 +1,6 @@
 # profile-gen
 
-A simple personal site generator from which you can select different styles.
+A simple personal site generator from which you can select different themes.
 
 ## Usage
 
@@ -8,7 +8,7 @@ A simple personal site generator from which you can select different styles.
 npm i -g profile-gen
 ```
 
-Fill out `data.json` with your information. Then to generate your site just
+Fill out `data.json` based on [this file](https://github.com/pineapplelol/profile-gen/blob/master/data.json) with your information. Then to generate your site just
 
 ```bash
 profile-gen data.json

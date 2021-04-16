@@ -55,6 +55,13 @@ export const writeToFile = async (path: string, data: string) => {
   }
 };
 
+/**
+ * Will generate complete profile site by creating new directory called
+ * profile-site, and writing html code to index.html and copying relevant
+ * css theme into main.css.
+ * @param htmlString – the html code to be copied into index.html.
+ * @param cssTheme – the name of the css theme to be used for the site.
+ */
 export const genProfile = async (htmlString: string, cssTheme: string) => {
   let dir = './profile-site';
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
@@ -69,6 +76,11 @@ export const genProfile = async (htmlString: string, cssTheme: string) => {
   });
 };
 
+/**
+ * Given the args from the CLI, it will read and parse the JSON file to return the data.
+ * @param args – the args from the CLI containing the name of the JSON file.
+ * @returns the JSON data provided in the file.
+ */
 export const parseJSON = (args: string) => {
   return JSON.parse(fs.readFileSync(`./${args}`, 'utf8'));
 };

@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-const util = require('./generators');
+const util = require('./util');
 const [, , ...args] = process.argv;
 const data = util.parseJSON(args);
 
