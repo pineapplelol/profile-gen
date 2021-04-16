@@ -1,4 +1,9 @@
 {
+  "name": "passgen",
+  "version": "0.1",
+  "description": "A packaged foo fooer for fooing foos",
+  "homepage": "https://github.com/pineapplelol/passgen",
+  "main": "index.js",
   "dependencies": {
     "fs": "^0.0.1-security"
   },
