@@ -1,6 +1,6 @@
 {
   "name": "profile-gen",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A simple profile site generator.",
   "homepage": "https://github.com/pineapplelol/profile-gen",
   "main": "cli.js",

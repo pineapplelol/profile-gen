@@ -1,10 +1,7 @@
 #! /usr/bin/env node
 
 const util = require('./generators');
-// const data = require('./data.json');
-
 const [, , ...args] = process.argv;
-
 const data = require(`./${args}`);
 
 let htmlString: string = `

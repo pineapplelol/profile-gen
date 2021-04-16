@@ -61,7 +61,7 @@ export const genProfile = async (htmlString: string, cssTheme: string) => {
 
   writeToFile('./profile-site/index.html', htmlString);
 
-  fs.readFile(`./themes/${cssTheme}.css`, 'utf8', (err, data) => {
+  fs.readFile(__dirname + `/themes/${cssTheme}.css`, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return;
