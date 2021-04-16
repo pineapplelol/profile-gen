@@ -1,5 +1,11 @@
+#! /usr/bin/env node
+
 const util = require('./generators');
-const data = require('./data.json');
+// const data = require('./data.json');
+
+const [, , ...args] = process.argv;
+
+const data = require(`./${args}`);
 
 let htmlString: string = `
 <!DOCTYPE html>
@@ -9,7 +15,7 @@ let htmlString: string = `
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="${data.theme.name}.css">
+  <link rel="stylesheet" href="main.css">
   <style>
     :root {
       --primary: ${data.theme.color};
@@ -65,4 +71,4 @@ htmlString += util.genSingleTag('/footer');
 htmlString += util.genSingleTag('/body');
 htmlString += util.genSingleTag('/html');
 
-util.writeToFile('index.html', htmlString);
+util.genProfile(htmlString, data.theme.name);

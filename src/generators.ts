@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require('fs');
 
 /**
  * Will generate both the start and end tag, as well as putting
@@ -12,11 +12,11 @@ const fs = require("fs");
 export const genTag = (
   tag: string,
   text: string,
-  attributes?: Record<string, string>
+  attributes?: Record<string, string>,
 ) => {
   let string = `<${tag}`;
   Object.keys(attributes ?? {})?.map(
-    (k) => (string += ` ${k}="${attributes[k]}"`)
+    (k) => (string += ` ${k}="${attributes[k]}"`),
   );
   return string + `>${text}</${tag}>`;
 };
@@ -31,11 +31,11 @@ export const genTag = (
  */
 export const genSingleTag = (
   tag: string,
-  attributes?: Record<string, string>
+  attributes?: Record<string, string>,
 ) => {
   let string = `<${tag}`;
   Object.keys(attributes ?? {}).map(
-    (k) => (string += ` ${k}="${attributes[k]}"`)
+    (k) => (string += ` ${k}="${attributes[k]}"`),
   );
   return string + `>`;
 };
@@ -48,9 +48,24 @@ export const genSingleTag = (
 export const writeToFile = async (path: string, data: string) => {
   let filehandle = null;
   try {
-    filehandle = await fs.promises.open(path, "w");
+    filehandle = await fs.promises.open(path, 'w');
     await filehandle.writeFile(data);
   } finally {
     if (filehandle) await filehandle.close();
   }
+};
+
+export const genProfile = async (htmlString: string, cssTheme: string) => {
+  let dir = './profile-site';
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+
+  writeToFile('./profile-site/index.html', htmlString);
+
+  fs.readFile(`./themes/${cssTheme}.css`, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    writeToFile('./profile-site/main.css', data);
+  });
 };
