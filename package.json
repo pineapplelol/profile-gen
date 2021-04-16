@@ -1,6 +1,6 @@
 {
   "name": "passgen",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "A packaged foo fooer for fooing foos",
   "homepage": "https://github.com/pineapplelol/passgen",
   "main": "index.js",
