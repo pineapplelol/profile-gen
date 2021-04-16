@@ -12,7 +12,7 @@ let htmlString: string = `
   <link rel="stylesheet" href="${data.theme.name}.css">
   <style>
     :root {
-      --primary: ${data.theme.color}};
+      --primary: ${data.theme.color};
     }
   </style>`;
 
@@ -21,9 +21,15 @@ htmlString += util.genSingleTag('/head');
 
 htmlString += util.genSingleTag('body');
 htmlString += util.genSingleTag('header');
+htmlString += util.genTag('img', '', {
+  src: data.image,
+  alt: `${data.name} profile picture`,
+});
 htmlString += util.genTag('h1', data.name);
-htmlString += util.genTag('p', data.tagline, { class: 'subtitle' });
 htmlString += util.genSingleTag('/header');
+
+htmlString += util.genSingleTag('main');
+htmlString += util.genTag('p', data.tagline, { class: 'subtitle' });
 
 for (const section of data.sections) {
   htmlString += util.genSingleTag('section');
@@ -41,13 +47,16 @@ for (const section of data.sections) {
   htmlString += util.genSingleTag('/ul');
   htmlString += util.genSingleTag('/section');
 }
+htmlString += util.genSingleTag('/main');
 
-htmlString += util.genSingleTag('/footer');
+htmlString += util.genSingleTag('footer');
 htmlString += util.genTag('p', 'Copyright 2021');
 htmlString += util.genSingleTag('ul');
 for (let i: number = 0; i < data.footerLinks.length; i += 1) {
   htmlString += util.genSingleTag('li');
-  htmlString += util.genTag('p', data.footerLinks[i].link);
+  htmlString += util.genTag('a', data.footerLinks[i].linkName, {
+    href: data.footerLinks[i].link,
+  });
   htmlString += util.genSingleTag('/li');
 }
 htmlString += util.genSingleTag('/ul');
