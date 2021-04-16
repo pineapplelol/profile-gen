@@ -60,7 +60,6 @@ export const genProfile = async (htmlString: string, cssTheme: string) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
   writeToFile('./profile-site/index.html', htmlString);
-
   fs.readFile(__dirname + `/themes/${cssTheme}.css`, 'utf8', (err, data) => {
     if (err) {
       console.error(err);

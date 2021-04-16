@@ -108,6 +108,7 @@ var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void
         if (!fs.existsSync(dir))
             fs.mkdirSync(dir);
         exports.writeToFile('./profile-site/index.html', htmlString);
+        console.log(__dirname + ("/themes/" + cssTheme + ".css"));
         fs.readFile(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8', function (err, data) {
             if (err) {
                 console.error(err);

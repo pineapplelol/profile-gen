@@ -4,10 +4,14 @@ A simple personal site generator from which you can select different styles.
 
 ## Usage
 
-Fill out `data.json` with your information. Then to generate your `index.html` file, run
-
-```
-node .
+```bash
+npm i -g profile-gen
 ```
 
-After, create a seperate directory with the newly created `index.html` and the CSS file with the theme that you want to use from `/themes`.
+Fill out `data.json` with your information. Then to generate your site just
+
+```bash
+profile-gen data.json
+```
+
+and it will make your site in the `profile-site` directory.
