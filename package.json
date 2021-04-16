@@ -1,8 +1,8 @@
 {
-  "name": "passgen",
+  "name": "pagegen",
   "version": "0.1.0",
   "description": "A packaged foo fooer for fooing foos",
-  "homepage": "https://github.com/pineapplelol/passgen",
+  "homepage": "https://github.com/pineapplelol/pagegen",
   "main": "index.js",
   "dependencies": {
     "fs": "^0.0.1-security"
