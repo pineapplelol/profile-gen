@@ -36,8 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.writeToFile = exports.genSingleTag = exports.genTag = void 0;
-var fs = require("fs");
+exports.parseJSON = exports.genProfile = exports.writeToFile = exports.genSingleTag = exports.genTag = void 0;
+var fs = require('fs');
 /**
  * Will generate both the start and end tag, as well as putting
  * the text in between. If an attribute for the tag is provided, it
@@ -82,7 +82,7 @@ var writeToFile = function (path, data) { return __awaiter(void 0, void 0, void 
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, , 4, 7]);
-                return [4 /*yield*/, fs.promises.open(path, "w")];
+                return [4 /*yield*/, fs.promises.open(path, 'w')];
             case 2:
                 filehandle = _a.sent();
                 return [4 /*yield*/, filehandle.writeFile(data)];
@@ -101,3 +101,37 @@ var writeToFile = function (path, data) { return __awaiter(void 0, void 0, void 
     });
 }); };
 exports.writeToFile = writeToFile;
+/**
+ * Will generate complete profile site by creating new directory called
+ * profile-site, and writing html code to index.html and copying relevant
+ * css theme into main.css.
+ * @param htmlString – the html code to be copied into index.html.
+ * @param cssTheme – the name of the css theme to be used for the site.
+ */
+var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void 0, void 0, function () {
+    var dir;
+    return __generator(this, function (_a) {
+        dir = './profile-site';
+        if (!fs.existsSync(dir))
+            fs.mkdirSync(dir);
+        exports.writeToFile('./profile-site/index.html', htmlString);
+        fs.readFile(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8', function (err, data) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            exports.writeToFile('./profile-site/main.css', data);
+        });
+        return [2 /*return*/];
+    });
+}); };
+exports.genProfile = genProfile;
+/**
+ * Given the args from the CLI, it will read and parse the JSON file to return the data.
+ * @param args – the args from the CLI containing the name of the JSON file.
+ * @returns the JSON data provided in the file.
+ */
+var parseJSON = function (args) {
+    return JSON.parse(fs.readFileSync("./" + args, 'utf8'));
+};
+exports.parseJSON = parseJSON;
