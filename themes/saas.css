@@ -125,3 +125,7 @@ footer > ul > li {
   display: inline-block;
   margin-left: 1em;
 }
+
+footer > ul > li > a {
+  color: var(--text-color);
+}
