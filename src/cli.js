@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-var _a;
+var _a, _b;
 var cla = require('command-line-args');
 var util = require('./util');
 var argDefinitions = [
@@ -12,6 +12,6 @@ var args = cla(argDefinitions);
 var data = util.parseJSON(args.file);
 // util.validateJSON(data);
 var htmlString = util.genHTMLString(data);
-util.genProfile(htmlString, (_a = args.theme) !== null && _a !== void 0 ? _a : 'neeraj');
+util.genProfile(htmlString, (_a = args.theme) !== null && _a !== void 0 ? _a : 'neeraj', (_b = args.dir) !== null && _b !== void 0 ? _b : 'profile-site');
 if (args.minify)
     util.minifyFiles();

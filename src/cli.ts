@@ -14,5 +14,5 @@ const args = cla(argDefinitions);
 const data = util.parseJSON(args.file);
 // util.validateJSON(data);
 let htmlString: string = util.genHTMLString(data);
-util.genProfile(htmlString, args.theme ?? 'neeraj');
+util.genProfile(htmlString, args.theme ?? 'neeraj', args.dir ?? 'profile-site');
 if (args.minify) util.minifyFiles();

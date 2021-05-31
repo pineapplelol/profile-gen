@@ -174,22 +174,32 @@ export const genHTMLString = (data) => {
  * css theme into main.css.
  * @param htmlString – the html code to be copied into index.html.
  * @param cssTheme – the name of the css theme to be used for the site.
+ * @param directory – the name of the directory to put site files.
  */
-export const genProfile = async (htmlString: string, cssTheme: string) => {
+export const genProfile = async (
+  htmlString: string,
+  cssTheme: string,
+  directory: string,
+) => {
   const spinner = newSpinner();
   spinner.start('Generating directory contents');
 
-  const dir = './profile-site'; // TODO: Let user customize
+  const dir = `./${directory}`;
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
   writeToFile(`${dir}/index.html`, htmlString);
-  fs.readFile(__dirname + `/themes/${cssTheme}.css`, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    writeToFile(`${dir}/main.css`, data);
-  });
+  try {
+    fs.readFile(__dirname + `/themes/${cssTheme}.css`, 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      writeToFile(`${dir}/main.css`, data);
+    });
+  } catch {
+    spinner.fail('Theme does not exist.');
+    process.exit(1);
+  }
   spinner.succeed();
 };
 

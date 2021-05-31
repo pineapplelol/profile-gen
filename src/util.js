@@ -199,23 +199,30 @@ exports.genHTMLString = genHTMLString;
  * css theme into main.css.
  * @param htmlString – the html code to be copied into index.html.
  * @param cssTheme – the name of the css theme to be used for the site.
+ * @param directory – the name of the directory to put site files.
  */
-var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void 0, void 0, function () {
+var genProfile = function (htmlString, cssTheme, directory) { return __awaiter(void 0, void 0, void 0, function () {
     var spinner, dir;
     return __generator(this, function (_a) {
         spinner = newSpinner();
         spinner.start('Generating directory contents');
-        dir = './profile-site';
+        dir = "./" + directory;
         if (!fs.existsSync(dir))
             fs.mkdirSync(dir);
         exports.writeToFile(dir + "/index.html", htmlString);
-        fs.readFile(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8', function (err, data) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            exports.writeToFile(dir + "/main.css", data);
-        });
+        try {
+            fs.readFile(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8', function (err, data) {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                exports.writeToFile(dir + "/main.css", data);
+            });
+        }
+        catch (_b) {
+            spinner.fail('Theme does not exist.');
+            process.exit(1);
+        }
         spinner.succeed();
         return [2 /*return*/];
     });
