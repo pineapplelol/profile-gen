@@ -1,4 +1,35 @@
 const fs = require('fs');
+const ora = require('ora');
+
+/**
+ * Returns new spinner used for logging events.
+ * @returns a new ora spinner.
+ */
+const newSpinner = () => {
+  return new ora({ color: 'yellow' });
+};
+
+/**
+ * Given the args from the CLI, it will read and parse the JSON file to return the data.
+ * @param args – the args from the CLI containing the name of the JSON file.
+ * @returns the JSON data provided in the file.
+ */
+export const parseJSON = (args: string) => {
+  const spinner = newSpinner();
+  spinner.start('Parsing JSON file');
+  const json = JSON.parse(fs.readFileSync(`./${args}`, 'utf8'));
+  spinner.succeed();
+  return json;
+};
+
+export const validateJSON = () => {
+  const spinner = newSpinner();
+  spinner.start('Validating JSON file');
+  // TODO: validate
+  // if missing optional, spinner.warn("Missing x");
+  // if missing required, spinner.fail("Missing x"); exit(1);
+  spinner.succeed();
+};
 
 /**
  * Will generate both the start and end tag, as well as putting
@@ -13,7 +44,7 @@ export const genTag = (
   tag: string,
   text: string,
   attributes?: Record<string, string>,
-) => {
+): string => {
   let string = `<${tag}`;
   Object.keys(attributes ?? {})?.map(
     (k) => (string += ` ${k}="${attributes[k]}"`),
@@ -23,7 +54,7 @@ export const genTag = (
 
 /**
  * Will generate only a single tag. To make it an ending tag, the \
- * should be appended to the provided string. If an attribute for the
+ * should be prepended to the provided string. If an attribute for the
  * tag is provided, it is included as well.
  * @param tag – the tag to be used in the html.
  * @param attributes – attributes that exist for the html tags.
@@ -32,7 +63,7 @@ export const genTag = (
 export const genSingleTag = (
   tag: string,
   attributes?: Record<string, string>,
-) => {
+): string => {
   let string = `<${tag}`;
   Object.keys(attributes ?? {}).map(
     (k) => (string += ` ${k}="${attributes[k]}"`),
@@ -56,6 +87,82 @@ export const writeToFile = async (path: string, data: string) => {
 };
 
 /**
+ * Generates the HTML string from the data provided in the json.
+ * @returns a string that represents the HTML code for the profile site.
+ */
+export const genHTMLString = (data) => {
+  const spinner = newSpinner();
+  spinner.start('Building site');
+
+  let htmlString: string = `
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <style>
+      :root {
+        --primary: ${data.theme.color};
+      }
+    </style>`;
+
+  htmlString += genTag('title', data.name);
+  htmlString += genSingleTag('/head');
+
+  htmlString += genSingleTag('body');
+  htmlString += genSingleTag('header');
+  htmlString += genTag('img', '', {
+    src: data.image,
+    alt: `${data.name} profile picture`,
+  });
+  htmlString += genTag('h1', data.name);
+  htmlString += genSingleTag('/header');
+
+  htmlString += genSingleTag('main');
+  htmlString += genTag('p', data.tagline, { class: 'subtitle' });
+
+  for (const section of data.sections) {
+    htmlString += genSingleTag('section');
+    htmlString += genTag('h2', section.sectionName);
+    htmlString += genSingleTag('ul');
+
+    for (const point of section.points) {
+      htmlString += genSingleTag('li');
+      htmlString += genTag('h3', point.sectionPointName);
+      htmlString += genTag('h4', point.sectionTime);
+      htmlString += genTag('p', point.sectionDescription);
+      htmlString += genSingleTag('/li');
+    }
+
+    htmlString += genSingleTag('/ul');
+    htmlString += genSingleTag('/section');
+  }
+  htmlString += genSingleTag('/main');
+
+  htmlString += genSingleTag('footer');
+  htmlString += genTag('p', 'Copyright 2021');
+  htmlString += genSingleTag('ul');
+  for (let i: number = 0; i < data.footerLinks.length; i += 1) {
+    htmlString += genSingleTag('li');
+    htmlString += genTag('a', data.footerLinks[i].linkName, {
+      href: data.footerLinks[i].link,
+    });
+    htmlString += genSingleTag('/li');
+  }
+  htmlString += genSingleTag('/ul');
+  htmlString += genSingleTag('/footer');
+
+  htmlString += genSingleTag('/body');
+  htmlString += genSingleTag('/html');
+
+  spinner.succeed();
+  return htmlString;
+};
+
+/**
  * Will generate complete profile site by creating new directory called
  * profile-site, and writing html code to index.html and copying relevant
  * css theme into main.css.
@@ -63,6 +170,9 @@ export const writeToFile = async (path: string, data: string) => {
  * @param cssTheme – the name of the css theme to be used for the site.
  */
 export const genProfile = async (htmlString: string, cssTheme: string) => {
+  const spinner = newSpinner();
+  spinner.start('Generating directory contents');
+
   let dir = './profile-site';
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
@@ -74,13 +184,5 @@ export const genProfile = async (htmlString: string, cssTheme: string) => {
     }
     writeToFile('./profile-site/main.css', data);
   });
-};
-
-/**
- * Given the args from the CLI, it will read and parse the JSON file to return the data.
- * @param args – the args from the CLI containing the name of the JSON file.
- * @returns the JSON data provided in the file.
- */
-export const parseJSON = (args: string) => {
-  return JSON.parse(fs.readFileSync(`./${args}`, 'utf8'));
+  spinner.succeed();
 };

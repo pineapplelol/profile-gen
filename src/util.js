@@ -36,8 +36,38 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.parseJSON = exports.genProfile = exports.writeToFile = exports.genSingleTag = exports.genTag = void 0;
+exports.genProfile = exports.genHTMLString = exports.writeToFile = exports.genSingleTag = exports.genTag = exports.validateJSON = exports.parseJSON = void 0;
 var fs = require('fs');
+var ora = require('ora');
+/**
+ * Returns new spinner used for logging events.
+ * @returns a new ora spinner.
+ */
+var newSpinner = function () {
+    return new ora({ color: 'yellow' });
+};
+/**
+ * Given the args from the CLI, it will read and parse the JSON file to return the data.
+ * @param args – the args from the CLI containing the name of the JSON file.
+ * @returns the JSON data provided in the file.
+ */
+var parseJSON = function (args) {
+    var spinner = newSpinner();
+    spinner.start('Parsing JSON file');
+    var json = JSON.parse(fs.readFileSync("./" + args, 'utf8'));
+    spinner.succeed();
+    return json;
+};
+exports.parseJSON = parseJSON;
+var validateJSON = function () {
+    var spinner = newSpinner();
+    spinner.start('Validating JSON file');
+    // TODO: validate
+    // if missing optional, spinner.warn("Missing x");
+    // if missing required, spinner.fail("Missing x"); exit(1);
+    spinner.succeed();
+};
+exports.validateJSON = validateJSON;
 /**
  * Will generate both the start and end tag, as well as putting
  * the text in between. If an attribute for the tag is provided, it
@@ -56,7 +86,7 @@ var genTag = function (tag, text, attributes) {
 exports.genTag = genTag;
 /**
  * Will generate only a single tag. To make it an ending tag, the \
- * should be appended to the provided string. If an attribute for the
+ * should be prepended to the provided string. If an attribute for the
  * tag is provided, it is included as well.
  * @param tag – the tag to be used in the html.
  * @param attributes – attributes that exist for the html tags.
@@ -102,6 +132,61 @@ var writeToFile = function (path, data) { return __awaiter(void 0, void 0, void 
 }); };
 exports.writeToFile = writeToFile;
 /**
+ * Generates the HTML string from the data provided in the json.
+ * @returns a string that represents the HTML code for the profile site.
+ */
+var genHTMLString = function (data) {
+    var spinner = newSpinner();
+    spinner.start('Building site');
+    var htmlString = "\n  <!DOCTYPE html>\n  <html lang=\"en\">\n\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <link rel=\"stylesheet\" href=\"main.css\">\n    <style>\n      :root {\n        --primary: " + data.theme.color + ";\n      }\n    </style>";
+    htmlString += exports.genTag('title', data.name);
+    htmlString += exports.genSingleTag('/head');
+    htmlString += exports.genSingleTag('body');
+    htmlString += exports.genSingleTag('header');
+    htmlString += exports.genTag('img', '', {
+        src: data.image,
+        alt: data.name + " profile picture"
+    });
+    htmlString += exports.genTag('h1', data.name);
+    htmlString += exports.genSingleTag('/header');
+    htmlString += exports.genSingleTag('main');
+    htmlString += exports.genTag('p', data.tagline, { "class": 'subtitle' });
+    for (var _i = 0, _a = data.sections; _i < _a.length; _i++) {
+        var section = _a[_i];
+        htmlString += exports.genSingleTag('section');
+        htmlString += exports.genTag('h2', section.sectionName);
+        htmlString += exports.genSingleTag('ul');
+        for (var _b = 0, _c = section.points; _b < _c.length; _b++) {
+            var point = _c[_b];
+            htmlString += exports.genSingleTag('li');
+            htmlString += exports.genTag('h3', point.sectionPointName);
+            htmlString += exports.genTag('h4', point.sectionTime);
+            htmlString += exports.genTag('p', point.sectionDescription);
+            htmlString += exports.genSingleTag('/li');
+        }
+        htmlString += exports.genSingleTag('/ul');
+        htmlString += exports.genSingleTag('/section');
+    }
+    htmlString += exports.genSingleTag('/main');
+    htmlString += exports.genSingleTag('footer');
+    htmlString += exports.genTag('p', 'Copyright 2021');
+    htmlString += exports.genSingleTag('ul');
+    for (var i = 0; i < data.footerLinks.length; i += 1) {
+        htmlString += exports.genSingleTag('li');
+        htmlString += exports.genTag('a', data.footerLinks[i].linkName, {
+            href: data.footerLinks[i].link
+        });
+        htmlString += exports.genSingleTag('/li');
+    }
+    htmlString += exports.genSingleTag('/ul');
+    htmlString += exports.genSingleTag('/footer');
+    htmlString += exports.genSingleTag('/body');
+    htmlString += exports.genSingleTag('/html');
+    spinner.succeed();
+    return htmlString;
+};
+exports.genHTMLString = genHTMLString;
+/**
  * Will generate complete profile site by creating new directory called
  * profile-site, and writing html code to index.html and copying relevant
  * css theme into main.css.
@@ -109,8 +194,10 @@ exports.writeToFile = writeToFile;
  * @param cssTheme – the name of the css theme to be used for the site.
  */
 var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void 0, void 0, function () {
-    var dir;
+    var spinner, dir;
     return __generator(this, function (_a) {
+        spinner = newSpinner();
+        spinner.start('Generating directory contents');
         dir = './profile-site';
         if (!fs.existsSync(dir))
             fs.mkdirSync(dir);
@@ -122,16 +209,8 @@ var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void
             }
             exports.writeToFile('./profile-site/main.css', data);
         });
+        spinner.succeed();
         return [2 /*return*/];
     });
 }); };
 exports.genProfile = genProfile;
-/**
- * Given the args from the CLI, it will read and parse the JSON file to return the data.
- * @param args – the args from the CLI containing the name of the JSON file.
- * @returns the JSON data provided in the file.
- */
-var parseJSON = function (args) {
-    return JSON.parse(fs.readFileSync("./" + args, 'utf8'));
-};
-exports.parseJSON = parseJSON;
