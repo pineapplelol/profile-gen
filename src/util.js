@@ -47,14 +47,20 @@ var newSpinner = function () {
     return new ora({ color: 'yellow' });
 };
 /**
- * Given the args from the CLI, it will read and parse the JSON file to return the data.
- * @param args – the args from the CLI containing the name of the JSON file.
+ * Given the filename from the CLI, it will read and parse the JSON file to return the data.
+ * @param file – the file name from the CLI args containing the name of the JSON file.
  * @returns the JSON data provided in the file.
  */
-var parseJSON = function (args) {
+var parseJSON = function (file) {
     var spinner = newSpinner();
     spinner.start('Parsing JSON file');
-    var json = JSON.parse(fs.readFileSync("./" + args, 'utf8'));
+    try {
+        var json = JSON.parse(fs.readFileSync("./" + file, 'utf8'));
+    }
+    catch (error) {
+        spinner.fail("File " + file + " does not exist.");
+        process.exit(1);
+    }
     spinner.succeed();
     return json;
 };
