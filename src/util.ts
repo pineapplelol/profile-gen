@@ -1,9 +1,13 @@
 const fs = require('fs');
 const ora = require('ora');
 
-const spinner = new ora({
-  color: 'yellow',
-});
+/**
+ * Returns new spinner used for logging events.
+ * @returns a new ora spinner.
+ */
+const newSpinner = () => {
+  return new ora({ color: 'yellow' });
+};
 
 /**
  * Given the args from the CLI, it will read and parse the JSON file to return the data.
@@ -11,18 +15,20 @@ const spinner = new ora({
  * @returns the JSON data provided in the file.
  */
 export const parseJSON = (args: string) => {
+  const spinner = newSpinner();
   spinner.start('Parsing JSON file');
   const json = JSON.parse(fs.readFileSync(`./${args}`, 'utf8'));
-  spinner.success();
+  spinner.succeed();
   return json;
 };
 
 export const validateJSON = () => {
+  const spinner = newSpinner();
   spinner.start('Validating JSON file');
   // TODO: validate
   // if missing optional, spinner.warn("Missing x");
   // if missing required, spinner.fail("Missing x"); exit(1);
-  spinner.success();
+  spinner.succeed();
 };
 
 /**
@@ -48,7 +54,7 @@ export const genTag = (
 
 /**
  * Will generate only a single tag. To make it an ending tag, the \
- * should be appended to the provided string. If an attribute for the
+ * should be prepended to the provided string. If an attribute for the
  * tag is provided, it is included as well.
  * @param tag – the tag to be used in the html.
  * @param attributes – attributes that exist for the html tags.
@@ -80,8 +86,14 @@ export const writeToFile = async (path: string, data: string) => {
   }
 };
 
-export const genHTMLString = (spinner, data) => {
+/**
+ * Generates the HTML string from the data provided in the json.
+ * @returns a string that represents the HTML code for the profile site.
+ */
+export const genHTMLString = (data) => {
+  const spinner = newSpinner();
   spinner.start('Generating site');
+
   let htmlString: string = `
   <!DOCTYPE html>
   <html lang="en">
@@ -146,7 +158,7 @@ export const genHTMLString = (spinner, data) => {
   htmlString += genSingleTag('/body');
   htmlString += genSingleTag('/html');
 
-  spinner.success();
+  spinner.succeed();
   return htmlString;
 };
 

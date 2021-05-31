@@ -39,27 +39,33 @@ exports.__esModule = true;
 exports.genProfile = exports.genHTMLString = exports.writeToFile = exports.genSingleTag = exports.genTag = exports.validateJSON = exports.parseJSON = void 0;
 var fs = require('fs');
 var ora = require('ora');
-var spinner = new ora({
-    color: 'yellow'
-});
+/**
+ * Returns new spinner used for logging events.
+ * @returns a new ora spinner.
+ */
+var newSpinner = function () {
+    return new ora({ color: 'yellow' });
+};
 /**
  * Given the args from the CLI, it will read and parse the JSON file to return the data.
  * @param args – the args from the CLI containing the name of the JSON file.
  * @returns the JSON data provided in the file.
  */
 var parseJSON = function (args) {
+    var spinner = newSpinner();
     spinner.start('Parsing JSON file');
     var json = JSON.parse(fs.readFileSync("./" + args, 'utf8'));
-    spinner.success();
+    spinner.succeed();
     return json;
 };
 exports.parseJSON = parseJSON;
 var validateJSON = function () {
+    var spinner = newSpinner();
     spinner.start('Validating JSON file');
     // TODO: validate
     // if missing optional, spinner.warn("Missing x");
     // if missing required, spinner.fail("Missing x"); exit(1);
-    spinner.success();
+    spinner.succeed();
 };
 exports.validateJSON = validateJSON;
 /**
@@ -80,7 +86,7 @@ var genTag = function (tag, text, attributes) {
 exports.genTag = genTag;
 /**
  * Will generate only a single tag. To make it an ending tag, the \
- * should be appended to the provided string. If an attribute for the
+ * should be prepended to the provided string. If an attribute for the
  * tag is provided, it is included as well.
  * @param tag – the tag to be used in the html.
  * @param attributes – attributes that exist for the html tags.
@@ -125,7 +131,12 @@ var writeToFile = function (path, data) { return __awaiter(void 0, void 0, void 
     });
 }); };
 exports.writeToFile = writeToFile;
-var genHTMLString = function (spinner, data) {
+/**
+ * Generates the HTML string from the data provided in the json.
+ * @returns a string that represents the HTML code for the profile site.
+ */
+var genHTMLString = function (data) {
+    var spinner = newSpinner();
     spinner.start('Generating site');
     var htmlString = "\n  <!DOCTYPE html>\n  <html lang=\"en\">\n\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <link rel=\"stylesheet\" href=\"main.css\">\n    <style>\n      :root {\n        --primary: " + data.theme.color + ";\n      }\n    </style>";
     htmlString += exports.genTag('title', data.name);
@@ -171,7 +182,7 @@ var genHTMLString = function (spinner, data) {
     htmlString += exports.genSingleTag('/footer');
     htmlString += exports.genSingleTag('/body');
     htmlString += exports.genSingleTag('/html');
-    spinner.success();
+    spinner.succeed();
     return htmlString;
 };
 exports.genHTMLString = genHTMLString;
