@@ -1,8 +1,8 @@
 {
   "name": "Neeraj Aggarwal",
-  "image": "https://neerajaggarwal.com/assets/sp.jpg",
+  "image": "https://neerajaggarwal.com/assets/lel.jpg",
   "tagline": "This is an example tagline.",
-  "theme": { "name": "saas", "color": "#002373" },
+  "theme": { "color": "#002373" },
   "sections": [
     {
       "sectionName": "Currently",
