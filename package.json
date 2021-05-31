@@ -15,6 +15,7 @@
   "dependencies": {
     "command-line-args": "^5.1.1",
     "fs": "^0.0.1-security",
+    "minify": "^7.0.2",
     "ora": "^5.4.0"
   },
   "devDependencies": {

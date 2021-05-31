@@ -11,4 +11,4 @@ var data = util.parseJSON(args.file);
 var htmlString = util.genHTMLString(data);
 util.genProfile(htmlString, data.theme.name);
 if (args.minify)
-    console.log("Minifying");
+    util.minifyFiles();

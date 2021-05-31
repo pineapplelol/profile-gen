@@ -1,5 +1,6 @@
 const fs = require('fs');
 const ora = require('ora');
+const minify = require('minify');
 
 /**
  * Returns new spinner used for logging events.
@@ -19,12 +20,12 @@ export const parseJSON = (file: string) => {
   spinner.start('Parsing JSON file');
   try {
     const json = JSON.parse(fs.readFileSync(`./${file}`, 'utf8'));
+    spinner.succeed();
+    return json;
   } catch (error) {
     spinner.fail(`File ${file} does not exist.`);
     process.exit(1);
   }
-  spinner.succeed();
-  return json;
 };
 
 export const validateJSON = () => {
@@ -178,16 +179,34 @@ export const genProfile = async (htmlString: string, cssTheme: string) => {
   const spinner = newSpinner();
   spinner.start('Generating directory contents');
 
-  let dir = './profile-site';
+  const dir = './profile-site'; // TODO: Let user customize
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
-  writeToFile('./profile-site/index.html', htmlString);
+  writeToFile(`${dir}/index.html`, htmlString);
   fs.readFile(__dirname + `/themes/${cssTheme}.css`, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return;
     }
-    writeToFile('./profile-site/main.css', data);
+    writeToFile(`${dir}/main.css`, data);
   });
+  spinner.succeed();
+};
+
+/**
+ * Minifies HTML file and rewrites to index.
+ */
+export const minifyFiles = () => {
+  const spinner = newSpinner();
+  spinner.start('Minifying files');
+  minify('./profile-site/index.html')
+    .then((minHTML) => writeToFile('./profile-site/index.html', minHTML))
+    .catch((e) => {
+      spinner.fail('Unable to minify HTML');
+      process.exit(1);
+    });
+  // minify('./profile-site/main.css')
+  //   .then((minCSS) => writeToFile('./profile-site/main.css', minCSS))
+  // .catch(e => {spinner.fail('Unable to minify CSS'); process.exit(1);});
   spinner.succeed();
 };
