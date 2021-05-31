@@ -137,7 +137,7 @@ exports.writeToFile = writeToFile;
  */
 var genHTMLString = function (data) {
     var spinner = newSpinner();
-    spinner.start('Generating site');
+    spinner.start('Building site');
     var htmlString = "\n  <!DOCTYPE html>\n  <html lang=\"en\">\n\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <link rel=\"stylesheet\" href=\"main.css\">\n    <style>\n      :root {\n        --primary: " + data.theme.color + ";\n      }\n    </style>";
     htmlString += exports.genTag('title', data.name);
     htmlString += exports.genSingleTag('/head');
@@ -194,8 +194,10 @@ exports.genHTMLString = genHTMLString;
  * @param cssTheme – the name of the css theme to be used for the site.
  */
 var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void 0, void 0, function () {
-    var dir;
+    var spinner, dir;
     return __generator(this, function (_a) {
+        spinner = newSpinner();
+        spinner.start('Generating directory contents');
         dir = './profile-site';
         if (!fs.existsSync(dir))
             fs.mkdirSync(dir);
@@ -207,6 +209,7 @@ var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void
             }
             exports.writeToFile('./profile-site/main.css', data);
         });
+        spinner.succeed();
         return [2 /*return*/];
     });
 }); };

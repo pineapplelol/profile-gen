@@ -92,7 +92,7 @@ export const writeToFile = async (path: string, data: string) => {
  */
 export const genHTMLString = (data) => {
   const spinner = newSpinner();
-  spinner.start('Generating site');
+  spinner.start('Building site');
 
   let htmlString: string = `
   <!DOCTYPE html>
@@ -170,6 +170,9 @@ export const genHTMLString = (data) => {
  * @param cssTheme – the name of the css theme to be used for the site.
  */
 export const genProfile = async (htmlString: string, cssTheme: string) => {
+  const spinner = newSpinner();
+  spinner.start('Generating directory contents');
+
   let dir = './profile-site';
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
@@ -181,4 +184,5 @@ export const genProfile = async (htmlString: string, cssTheme: string) => {
     }
     writeToFile('./profile-site/main.css', data);
   });
+  spinner.succeed();
 };
