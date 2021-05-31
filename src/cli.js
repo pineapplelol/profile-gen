@@ -2,6 +2,11 @@
 var util = require('./util');
 var _a = process.argv, args = _a.slice(2);
 var data = util.parseJSON(args);
+var ora = require('ora');
+var spinner = new ora({
+    color: 'yellow'
+});
+spinner.start('Building site');
 var htmlString = "\n<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"UTF-8\">\n  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <link rel=\"stylesheet\" href=\"main.css\">\n  <style>\n    :root {\n      --primary: " + data.theme.color + ";\n    }\n  </style>";
 htmlString += util.genTag('title', data.name);
 htmlString += util.genSingleTag('/head');
@@ -47,3 +52,4 @@ htmlString += util.genSingleTag('/footer');
 htmlString += util.genSingleTag('/body');
 htmlString += util.genSingleTag('/html');
 util.genProfile(htmlString, data.theme.name);
+spinner.succeed();

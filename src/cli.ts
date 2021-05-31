@@ -3,6 +3,14 @@
 const util = require('./util');
 const [, , ...args] = process.argv;
 const data = util.parseJSON(args);
+const ora = require('ora');
+
+
+const spinner = new ora({
+	color: 'yellow',
+});
+
+spinner.start('Building site');
 
 let htmlString: string = `
 <!DOCTYPE html>
@@ -69,3 +77,5 @@ htmlString += util.genSingleTag('/body');
 htmlString += util.genSingleTag('/html');
 
 util.genProfile(htmlString, data.theme.name);
+
+spinner.succeed();
