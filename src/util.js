@@ -48,14 +48,14 @@ var spinner = new ora({
  * @returns the JSON data provided in the file.
  */
 var parseJSON = function (args) {
-    spinner.start("Parsing JSON file");
+    spinner.start('Parsing JSON file');
     var json = JSON.parse(fs.readFileSync("./" + args, 'utf8'));
     spinner.success();
     return json;
 };
 exports.parseJSON = parseJSON;
 var validateJSON = function () {
-    spinner.start("Validating JSON file");
+    spinner.start('Validating JSON file');
     // TODO: validate
     // if missing optional, spinner.warn("Missing x");
     // if missing required, spinner.fail("Missing x"); exit(1);

@@ -2,7 +2,7 @@ const fs = require('fs');
 const ora = require('ora');
 
 const spinner = new ora({
-	color: 'yellow',
+  color: 'yellow',
 });
 
 /**
@@ -11,15 +11,14 @@ const spinner = new ora({
  * @returns the JSON data provided in the file.
  */
 export const parseJSON = (args: string) => {
-  spinner.start("Parsing JSON file");
+  spinner.start('Parsing JSON file');
   const json = JSON.parse(fs.readFileSync(`./${args}`, 'utf8'));
   spinner.success();
   return json;
 };
 
-
 export const validateJSON = () => {
-  spinner.start("Validating JSON file");
+  spinner.start('Validating JSON file');
   // TODO: validate
   // if missing optional, spinner.warn("Missing x");
   // if missing required, spinner.fail("Missing x"); exit(1);
@@ -39,7 +38,7 @@ export const genTag = (
   tag: string,
   text: string,
   attributes?: Record<string, string>,
-) : string => {
+): string => {
   let string = `<${tag}`;
   Object.keys(attributes ?? {})?.map(
     (k) => (string += ` ${k}="${attributes[k]}"`),
@@ -58,7 +57,7 @@ export const genTag = (
 export const genSingleTag = (
   tag: string,
   attributes?: Record<string, string>,
-) : string => {
+): string => {
   let string = `<${tag}`;
   Object.keys(attributes ?? {}).map(
     (k) => (string += ` ${k}="${attributes[k]}"`),
@@ -146,10 +145,10 @@ export const genHTMLString = (spinner, data) => {
 
   htmlString += genSingleTag('/body');
   htmlString += genSingleTag('/html');
-    spinner.success();
 
+  spinner.success();
   return htmlString;
-}
+};
 
 /**
  * Will generate complete profile site by creating new directory called
