@@ -210,19 +210,13 @@ var genProfile = function (htmlString, cssTheme, directory) { return __awaiter(v
         if (!fs.existsSync(dir))
             fs.mkdirSync(dir);
         exports.writeToFile(dir + "/index.html", htmlString);
-        try {
-            fs.readFile(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8', function (err, data) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-                exports.writeToFile(dir + "/main.css", data);
-            });
-        }
-        catch (_b) {
-            spinner.fail('Theme does not exist.');
-            process.exit(1);
-        }
+        fs.readFile(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8', function (err, data) {
+            if (err) {
+                spinner.fail('Theme does not exist.');
+                process.exit(1);
+            }
+            exports.writeToFile(dir + "/main.css", data);
+        });
         spinner.succeed();
         return [2 /*return*/];
     });

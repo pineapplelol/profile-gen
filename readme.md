@@ -22,3 +22,17 @@ There are a few options that you can use:
 - `minify`: Use flag `--minify` or `-m` to minify HTML index file
 - `--dir`: To use a custom directory (Default: profile-site)
 - `--theme`: To use a custom theme (Default: neeraj)
+
+## Themes
+
+### neeraj
+
+![](https://user-images.githubusercontent.com/7104017/120249624-5b3ee780-c230-11eb-970a-488f67a8e360.png)
+
+### hack
+
+![](https://user-images.githubusercontent.com/7104017/120249620-59752400-c230-11eb-9ca5-ba512e94dc44.png)
+
+### saas
+
+![](https://user-images.githubusercontent.com/7104017/120249626-5c701480-c230-11eb-9bb4-8e3e0bbb10c4.png)

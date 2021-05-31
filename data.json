@@ -1,6 +1,6 @@
 {
   "name": "Neeraj Aggarwal",
-  "image": "https://neerajaggarwal.com/assets/lel.jpg",
+  "image": "https://neerajaggarwal.com/assets/profile.jpg",
   "tagline": "This is an example tagline.",
   "theme": { "color": "#002373" },
   "sections": [
@@ -36,7 +36,7 @@
     }
   ],
   "footerLinks": [
-    { "linkName": "Personal Site", "link": "https://neeraj.lol" },
+    { "linkName": "LinkedIn", "link": "https://neeraj.lol" },
     { "linkName": "Github", "link": "https://github.com/n3a9" }
   ]
 }

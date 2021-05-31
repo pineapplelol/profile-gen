@@ -188,18 +188,14 @@ export const genProfile = async (
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
   writeToFile(`${dir}/index.html`, htmlString);
-  try {
-    fs.readFile(__dirname + `/themes/${cssTheme}.css`, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      writeToFile(`${dir}/main.css`, data);
-    });
-  } catch {
-    spinner.fail('Theme does not exist.');
-    process.exit(1);
-  }
+  fs.readFile(__dirname + `/themes/${cssTheme}.css`, 'utf8', (err, data) => {
+    if (err) {
+      spinner.fail('Theme does not exist.');
+      process.exit(1);
+    }
+    writeToFile(`${dir}/main.css`, data);
+  });
+
   spinner.succeed();
 };
 
