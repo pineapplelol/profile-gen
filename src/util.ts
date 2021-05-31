@@ -1,4 +1,30 @@
 const fs = require('fs');
+const ora = require('ora');
+
+const spinner = new ora({
+	color: 'yellow',
+});
+
+/**
+ * Given the args from the CLI, it will read and parse the JSON file to return the data.
+ * @param args – the args from the CLI containing the name of the JSON file.
+ * @returns the JSON data provided in the file.
+ */
+export const parseJSON = (args: string) => {
+  spinner.start("Parsing JSON file");
+  const json = JSON.parse(fs.readFileSync(`./${args}`, 'utf8'));
+  spinner.success();
+  return json;
+};
+
+
+export const validateJSON = () => {
+  spinner.start("Validating JSON file");
+  // TODO: validate
+  // if missing optional, spinner.warn("Missing x");
+  // if missing required, spinner.fail("Missing x"); exit(1);
+  spinner.success();
+};
 
 /**
  * Will generate both the start and end tag, as well as putting
@@ -13,7 +39,7 @@ export const genTag = (
   tag: string,
   text: string,
   attributes?: Record<string, string>,
-) => {
+) : string => {
   let string = `<${tag}`;
   Object.keys(attributes ?? {})?.map(
     (k) => (string += ` ${k}="${attributes[k]}"`),
@@ -32,7 +58,7 @@ export const genTag = (
 export const genSingleTag = (
   tag: string,
   attributes?: Record<string, string>,
-) => {
+) : string => {
   let string = `<${tag}`;
   Object.keys(attributes ?? {}).map(
     (k) => (string += ` ${k}="${attributes[k]}"`),
@@ -55,6 +81,76 @@ export const writeToFile = async (path: string, data: string) => {
   }
 };
 
+export const genHTMLString = (spinner, data) => {
+  spinner.start('Generating site');
+  let htmlString: string = `
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <style>
+      :root {
+        --primary: ${data.theme.color};
+      }
+    </style>`;
+
+  htmlString += genTag('title', data.name);
+  htmlString += genSingleTag('/head');
+
+  htmlString += genSingleTag('body');
+  htmlString += genSingleTag('header');
+  htmlString += genTag('img', '', {
+    src: data.image,
+    alt: `${data.name} profile picture`,
+  });
+  htmlString += genTag('h1', data.name);
+  htmlString += genSingleTag('/header');
+
+  htmlString += genSingleTag('main');
+  htmlString += genTag('p', data.tagline, { class: 'subtitle' });
+
+  for (const section of data.sections) {
+    htmlString += genSingleTag('section');
+    htmlString += genTag('h2', section.sectionName);
+    htmlString += genSingleTag('ul');
+
+    for (const point of section.points) {
+      htmlString += genSingleTag('li');
+      htmlString += genTag('h3', point.sectionPointName);
+      htmlString += genTag('h4', point.sectionTime);
+      htmlString += genTag('p', point.sectionDescription);
+      htmlString += genSingleTag('/li');
+    }
+
+    htmlString += genSingleTag('/ul');
+    htmlString += genSingleTag('/section');
+  }
+  htmlString += genSingleTag('/main');
+
+  htmlString += genSingleTag('footer');
+  htmlString += genTag('p', 'Copyright 2021');
+  htmlString += genSingleTag('ul');
+  for (let i: number = 0; i < data.footerLinks.length; i += 1) {
+    htmlString += genSingleTag('li');
+    htmlString += genTag('a', data.footerLinks[i].linkName, {
+      href: data.footerLinks[i].link,
+    });
+    htmlString += genSingleTag('/li');
+  }
+  htmlString += genSingleTag('/ul');
+  htmlString += genSingleTag('/footer');
+
+  htmlString += genSingleTag('/body');
+  htmlString += genSingleTag('/html');
+    spinner.success();
+
+  return htmlString;
+}
+
 /**
  * Will generate complete profile site by creating new directory called
  * profile-site, and writing html code to index.html and copying relevant
@@ -74,13 +170,4 @@ export const genProfile = async (htmlString: string, cssTheme: string) => {
     }
     writeToFile('./profile-site/main.css', data);
   });
-};
-
-/**
- * Given the args from the CLI, it will read and parse the JSON file to return the data.
- * @param args – the args from the CLI containing the name of the JSON file.
- * @returns the JSON data provided in the file.
- */
-export const parseJSON = (args: string) => {
-  return JSON.parse(fs.readFileSync(`./${args}`, 'utf8'));
 };
