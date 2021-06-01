@@ -1,6 +1,6 @@
 {
   "name": "profile-gen",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "A simple profile site generator.",
   "homepage": "https://github.com/pineapplelol/profile-gen",
   "main": "src/cli.js",
@@ -13,7 +13,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "command-line-args": "^5.1.1",
     "fs": "^0.0.1-security",
+    "minify": "^7.0.2",
     "ora": "^5.4.0"
   },
   "devDependencies": {

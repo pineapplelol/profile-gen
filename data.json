@@ -1,8 +1,8 @@
 {
   "name": "Neeraj Aggarwal",
-  "image": "https://neerajaggarwal.com/assets/sp.jpg",
+  "image": "https://neerajaggarwal.com/assets/profile.jpg",
   "tagline": "This is an example tagline.",
-  "theme": { "name": "saas", "color": "#002373" },
+  "theme": { "color": "#002373" },
   "sections": [
     {
       "sectionName": "Currently",
@@ -36,7 +36,7 @@
     }
   ],
   "footerLinks": [
-    { "linkName": "Personal Site", "link": "https://neeraj.lol" },
+    { "linkName": "LinkedIn", "link": "https://neeraj.lol" },
     { "linkName": "Github", "link": "https://github.com/n3a9" }
   ]
 }

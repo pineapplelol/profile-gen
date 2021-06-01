@@ -36,9 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.genProfile = exports.genHTMLString = exports.writeToFile = exports.genSingleTag = exports.genTag = exports.validateJSON = exports.parseJSON = void 0;
+exports.minifyFiles = exports.genProfile = exports.genHTMLString = exports.writeToFile = exports.genSingleTag = exports.genTag = exports.validateJSON = exports.parseJSON = void 0;
 var fs = require('fs');
 var ora = require('ora');
+var minify = require('minify');
 /**
  * Returns new spinner used for logging events.
  * @returns a new ora spinner.
@@ -47,16 +48,21 @@ var newSpinner = function () {
     return new ora({ color: 'yellow' });
 };
 /**
- * Given the args from the CLI, it will read and parse the JSON file to return the data.
- * @param args – the args from the CLI containing the name of the JSON file.
+ * Given the filename from the CLI, it will read and parse the JSON file to return the data.
+ * @param file – the file name from the CLI args containing the name of the JSON file.
  * @returns the JSON data provided in the file.
  */
-var parseJSON = function (args) {
+var parseJSON = function (file) {
     var spinner = newSpinner();
     spinner.start('Parsing JSON file');
-    var json = JSON.parse(fs.readFileSync("./" + args, 'utf8'));
-    spinner.succeed();
-    return json;
+    try {
+        var json = JSON.parse(fs.readFileSync("./" + file, 'utf8'));
+        spinner.succeed();
+        return json;
+    }
+    catch (error) {
+        spinner.fail("File " + file + " does not exist.");
+    }
 };
 exports.parseJSON = parseJSON;
 var validateJSON = function () {
@@ -192,25 +198,62 @@ exports.genHTMLString = genHTMLString;
  * css theme into main.css.
  * @param htmlString – the html code to be copied into index.html.
  * @param cssTheme – the name of the css theme to be used for the site.
+ * @param directory – the name of the directory to put site files.
  */
-var genProfile = function (htmlString, cssTheme) { return __awaiter(void 0, void 0, void 0, function () {
-    var spinner, dir;
+var genProfile = function (htmlString, cssTheme, directory) { return __awaiter(void 0, void 0, void 0, function () {
+    var spinner, dir, css;
     return __generator(this, function (_a) {
         spinner = newSpinner();
         spinner.start('Generating directory contents');
-        dir = './profile-site';
+        dir = "./" + directory;
         if (!fs.existsSync(dir))
             fs.mkdirSync(dir);
-        exports.writeToFile('./profile-site/index.html', htmlString);
-        fs.readFile(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8', function (err, data) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            exports.writeToFile('./profile-site/main.css', data);
-        });
-        spinner.succeed();
+        exports.writeToFile(dir + "/index.html", htmlString);
+        try {
+            css = fs.readFileSync(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8');
+            exports.writeToFile(dir + "/main.css", css);
+        }
+        catch (error) {
+            spinner.fail("Theme " + cssTheme + " does not exist.");
+        }
+        finally {
+            spinner.succeed();
+        }
         return [2 /*return*/];
     });
 }); };
 exports.genProfile = genProfile;
+/**
+ * Minifies HTML and CSS files.
+ */
+var minifyFiles = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var spinner, minHTML, minCSS, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                spinner = newSpinner();
+                spinner.start('Minifying files');
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 4, 5, 6]);
+                return [4 /*yield*/, minify('./profile-site/index.html')];
+            case 2:
+                minHTML = _b.sent();
+                return [4 /*yield*/, minify('./profile-site/main.css')];
+            case 3:
+                minCSS = _b.sent();
+                exports.writeToFile('./profile-site/index.html', minHTML);
+                exports.writeToFile('./profile-site/main.css', minCSS);
+                return [3 /*break*/, 6];
+            case 4:
+                _a = _b.sent();
+                spinner.fail('Unable to minify files.');
+                return [3 /*break*/, 6];
+            case 5:
+                spinner.succeed();
+                return [7 /*endfinally*/];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); };
+exports.minifyFiles = minifyFiles;

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const ora = require('ora');
+const minify = require('minify');
 
 /**
  * Returns new spinner used for logging events.
@@ -10,16 +11,20 @@ const newSpinner = () => {
 };
 
 /**
- * Given the args from the CLI, it will read and parse the JSON file to return the data.
- * @param args – the args from the CLI containing the name of the JSON file.
+ * Given the filename from the CLI, it will read and parse the JSON file to return the data.
+ * @param file – the file name from the CLI args containing the name of the JSON file.
  * @returns the JSON data provided in the file.
  */
-export const parseJSON = (args: string) => {
+export const parseJSON = (file: string) => {
   const spinner = newSpinner();
   spinner.start('Parsing JSON file');
-  const json = JSON.parse(fs.readFileSync(`./${args}`, 'utf8'));
-  spinner.succeed();
-  return json;
+  try {
+    const json = JSON.parse(fs.readFileSync(`./${file}`, 'utf8'));
+    spinner.succeed();
+    return json;
+  } catch (error) {
+    spinner.fail(`File ${file} does not exist.`);
+  }
 };
 
 export const validateJSON = () => {
@@ -168,21 +173,46 @@ export const genHTMLString = (data) => {
  * css theme into main.css.
  * @param htmlString – the html code to be copied into index.html.
  * @param cssTheme – the name of the css theme to be used for the site.
+ * @param directory – the name of the directory to put site files.
  */
-export const genProfile = async (htmlString: string, cssTheme: string) => {
+export const genProfile = async (
+  htmlString: string,
+  cssTheme: string,
+  directory: string,
+) => {
   const spinner = newSpinner();
   spinner.start('Generating directory contents');
 
-  let dir = './profile-site';
+  const dir = `./${directory}`;
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
-  writeToFile('./profile-site/index.html', htmlString);
-  fs.readFile(__dirname + `/themes/${cssTheme}.css`, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    writeToFile('./profile-site/main.css', data);
-  });
-  spinner.succeed();
+  writeToFile(`${dir}/index.html`, htmlString);
+  try {
+    const css = fs.readFileSync(__dirname + `/themes/${cssTheme}.css`, 'utf8');
+    writeToFile(`${dir}/main.css`, css);
+  } catch (error) {
+    spinner.fail(`Theme ${cssTheme} does not exist.`);
+  } finally {
+    spinner.succeed();
+  }
+};
+
+/**
+ * Minifies HTML and CSS files.
+ */
+export const minifyFiles = async () => {
+  const spinner = newSpinner();
+  spinner.start('Minifying files');
+
+  try {
+    const minHTML = await minify('./profile-site/index.html');
+    const minCSS = await minify('./profile-site/main.css');
+
+    writeToFile('./profile-site/index.html', minHTML);
+    writeToFile('./profile-site/main.css', minCSS);
+  } catch {
+    spinner.fail('Unable to minify files.');
+  } finally {
+    spinner.succeed();
+  }
 };
