@@ -20,11 +20,11 @@ export const parseJSON = (file: string) => {
   spinner.start('Parsing JSON file');
   try {
     const json = JSON.parse(fs.readFileSync(`./${file}`, 'utf8'));
-    spinner.succeed();
-    return json;
   } catch (error) {
     spinner.fail(`File ${file} does not exist.`);
-    process.exit(1);
+  } finally {
+    spinner.succeed();
+    return json;
   }
 };
 
@@ -188,31 +188,32 @@ export const genProfile = async (
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
   writeToFile(`${dir}/index.html`, htmlString);
-  fs.readFile(__dirname + `/themes/${cssTheme}.css`, 'utf8', (err, data) => {
-    if (err) {
-      spinner.fail('Theme does not exist.');
-      process.exit(1);
-    }
-    writeToFile(`${dir}/main.css`, data);
-  });
-
-  spinner.succeed();
+  try {
+    const css = fs.readFileSync(__dirname + `/themes/${cssTheme}.css`, 'utf8');
+    writeToFile(`${dir}/main.css`, css);
+  } catch (error) {
+    spinner.fail(`Theme ${cssTheme} does not exist.`);
+  } finally {
+    spinner.succeed();
+  }
 };
 
 /**
- * Minifies HTML file and rewrites to index.
+ * Minifies HTML and CSS files.
  */
-export const minifyFiles = () => {
+export const minifyFiles = async () => {
   const spinner = newSpinner();
   spinner.start('Minifying files');
-  minify('./profile-site/index.html')
-    .then((minHTML) => writeToFile('./profile-site/index.html', minHTML))
-    .catch((e) => {
-      spinner.fail('Unable to minify HTML');
-      process.exit(1);
-    });
-  // minify('./profile-site/main.css')
-  //   .then((minCSS) => writeToFile('./profile-site/main.css', minCSS))
-  // .catch(e => {spinner.fail('Unable to minify CSS'); process.exit(1);});
-  spinner.succeed();
+
+  try {
+    const minHTML = await minify('./profile-site/index.html');
+    const minCSS = await minify('./profile-site/main.css');
+
+    writeToFile('./profile-site/index.html', minHTML);
+    writeToFile('./profile-site/main.css', minCSS);
+  } catch {
+    spinner.fail('Unable to minify files.');
+  } finally {
+    spinner.succeed();
+  }
 };

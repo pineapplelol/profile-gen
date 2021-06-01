@@ -57,12 +57,13 @@ var parseJSON = function (file) {
     spinner.start('Parsing JSON file');
     try {
         var json = JSON.parse(fs.readFileSync("./" + file, 'utf8'));
-        spinner.succeed();
-        return json;
     }
     catch (error) {
         spinner.fail("File " + file + " does not exist.");
-        process.exit(1);
+    }
+    finally {
+        spinner.succeed();
+        return json;
     }
 };
 exports.parseJSON = parseJSON;
@@ -202,7 +203,7 @@ exports.genHTMLString = genHTMLString;
  * @param directory – the name of the directory to put site files.
  */
 var genProfile = function (htmlString, cssTheme, directory) { return __awaiter(void 0, void 0, void 0, function () {
-    var spinner, dir;
+    var spinner, dir, css;
     return __generator(this, function (_a) {
         spinner = newSpinner();
         spinner.start('Generating directory contents');
@@ -210,32 +211,51 @@ var genProfile = function (htmlString, cssTheme, directory) { return __awaiter(v
         if (!fs.existsSync(dir))
             fs.mkdirSync(dir);
         exports.writeToFile(dir + "/index.html", htmlString);
-        fs.readFile(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8', function (err, data) {
-            if (err) {
-                spinner.fail('Theme does not exist.');
-                process.exit(1);
-            }
-            exports.writeToFile(dir + "/main.css", data);
-        });
-        spinner.succeed();
+        try {
+            css = fs.readFileSync(__dirname + ("/themes/" + cssTheme + ".css"), 'utf8');
+            exports.writeToFile(dir + "/main.css", css);
+        }
+        catch (error) {
+            spinner.fail("Theme " + cssTheme + " does not exist.");
+        }
+        finally {
+            spinner.succeed();
+        }
         return [2 /*return*/];
     });
 }); };
 exports.genProfile = genProfile;
 /**
- * Minifies HTML file and rewrites to index.
+ * Minifies HTML and CSS files.
  */
-var minifyFiles = function () {
-    var spinner = newSpinner();
-    spinner.start('Minifying files');
-    minify('./profile-site/index.html')
-        .then(function (minHTML) { return exports.writeToFile('./profile-site/index.html', minHTML); })["catch"](function (e) {
-        spinner.fail('Unable to minify HTML');
-        process.exit(1);
+var minifyFiles = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var spinner, minHTML, minCSS, _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                spinner = newSpinner();
+                spinner.start('Minifying files');
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 4, 5, 6]);
+                return [4 /*yield*/, minify('./profile-site/index.html')];
+            case 2:
+                minHTML = _b.sent();
+                return [4 /*yield*/, minify('./profile-site/main.css')];
+            case 3:
+                minCSS = _b.sent();
+                exports.writeToFile('./profile-site/index.html', minHTML);
+                exports.writeToFile('./profile-site/main.css', minCSS);
+                return [3 /*break*/, 6];
+            case 4:
+                _a = _b.sent();
+                spinner.fail('Unable to minify files.');
+                return [3 /*break*/, 6];
+            case 5:
+                spinner.succeed();
+                return [7 /*endfinally*/];
+            case 6: return [2 /*return*/];
+        }
     });
-    // minify('./profile-site/main.css')
-    //   .then((minCSS) => writeToFile('./profile-site/main.css', minCSS))
-    // .catch(e => {spinner.fail('Unable to minify CSS'); process.exit(1);});
-    spinner.succeed();
-};
+}); };
 exports.minifyFiles = minifyFiles;
